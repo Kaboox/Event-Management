@@ -1,48 +1,96 @@
 ﻿@model Event_Management.Models.Event
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Szczegóły wydarzenia";
 }
 
-<h1>Details</h1>
+<h1>Szczegóły wydarzenia</h1>
 
 <div>
-    <h4>Event</h4>
+    <h4>@Model.Title</h4>
     <hr />
     <dl class="row">
+        @* Tytuł *@
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Title)
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Title)
         </dd>
+
+        @* Opis *@
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Description)
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Description)
         </dd>
+
+        @* Data *@
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Date)
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Date)
         </dd>
+
+        @* Kategoria *@
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Category)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Category.Id)
+            @Html.DisplayFor(model => model.Category.Name)
         </dd>
+
+        @* Miejsce *@
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Place)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Place.Id)
+            @Html.DisplayFor(model => model.Place.Name)
         </dd>
     </dl>
 </div>
+
+@* --- SEKCJA ZAPISYWANIA SIĘ --- *@
+<div class="my-4 p-3 border rounded bg-light">
+    @if (User.Identity.IsAuthenticated)
+    {
+        <h3>Chcesz wziąć udział?</h3>
+        
+        @if (ViewBag.IsUserRegistered == true)
+        {
+            // JUŻ ZAPISANY
+            <div class="alert alert-success">
+                <i class="bi bi-check-circle-fill"></i> 
+                <strong>Super! Już jesteś zapisany na to wydarzenie.</strong>
+            </div>
+            <button class="btn btn-secondary btn-lg" disabled>Już bierzesz udział</button>
+        }
+        else
+        {
+            // JESZCZE NIE ZAPISANY
+            <p>Kliknij poniżej, aby zapisać się na to wydarzenie.</p>
+            <form asp-action="Join" asp-route-id="@Model?.Id" method="post">
+                <button type="submit" class="btn btn-success btn-lg">Zapisz się na wydarzenie</button>
+            </form>
+        }
+    }
+    else
+    {
+        <div class="alert alert-info">
+            <strong><a href="/Identity/Account/Login">Zaloguj się</a></strong>, aby zapisać się na to wydarzenie.
+        </div>
+    }
+</div>
+@* ----------------------------------------------------------- *@
+
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    @* Przycisk Edycji widoczny TYLKO dla Admina *@
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-warning">Edytuj (Admin)</a> <span>|</span>
+    }
+    
+    <a asp-action="Index" class="btn btn-secondary">Powrót do listy</a>
 </div>

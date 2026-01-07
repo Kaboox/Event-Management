@@ -1,15 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Event_Management.Data;
+using Event_Management.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Event_Management.Data;
-using Event_Management.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Event_Management.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class PlacesController : Controller
     {
         private readonly ApplicationDbContext _context;
